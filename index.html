@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffd7e8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Character Archive">
+  <title>Character Archive</title>
+  <link rel="icon" href="./app-icon.ico">
+  <link rel="stylesheet" href="./styles.css?v=20260702-mobile-prompt">
+</head>
+<body>
+  <div class="app repository-app">
+    <video class="ambient-video ambient-video-light" autoplay muted loop playsinline aria-hidden="true">
+      <source src="./assets/archive-background.mp4" type="video/mp4">
+    </video>
+    <video class="ambient-video ambient-video-dark" autoplay muted loop playsinline aria-hidden="true">
+      <source src="./assets/archive-background-dark.mp4" type="video/mp4">
+    </video>
+    <div class="ambient-fallback" aria-hidden="true"></div>
+    <div class="ambient-overlay" aria-hidden="true"></div>
+
+    <header class="topbar vault-topbar">
+      <div class="brand vault-brand">
+        <div class="character-archive-title-wrap title-text-wrap" aria-label="Character Archive">
+          <p class="character-archive-kicker">Prompt Atelier</p>
+          <h1 class="character-archive-title-text">Character Archive</h1>
+        </div>
+        <span></span>
+      </div>
+
+      <nav class="vault-menu" aria-label="라이브러리 메뉴">
+        <button class="vault-menu-button character" type="button" data-vault-open="characterWindow" aria-controls="characterWindow">캐릭터</button>
+        <button class="vault-menu-button world" type="button" data-vault-open="worldWindow" aria-controls="worldWindow">세계관</button>
+        <button class="vault-menu-button keyword" type="button" data-vault-open="keywordWindow" aria-controls="keywordWindow">키워드</button>
+        <button class="vault-menu-button scene" type="button" data-vault-open="sceneWindow" aria-controls="sceneWindow">상황</button>
+        <button class="vault-menu-button prompt" type="button" data-vault-open="promptWindow" aria-controls="promptWindow">프롬프트</button>
+      </nav>
+    </header>
+
+    <main id="vaultDesktop" class="v2-workspace vault-desktop" aria-label="라이브러리 작업 공간">
+      <section id="characterWindow" class="vault-window character-window is-open" data-vault-window data-default-open style="--window-left: 4%; --window-top: 4%; --window-width: min(980px, 62vw); --window-height: min(820px, 84vh);">
+        <header class="vault-window-header" data-vault-drag-handle>
+          <div>
+            <span class="vault-window-kicker">Main Library</span>
+            <h2>캐릭터</h2>
+          </div>
+          <button class="vault-window-control vault-window-close" type="button" data-vault-close aria-label="캐릭터 창 닫기">×</button>
+        </header>
+        <div class="vault-window-body">
+          <section class="pane v2-character-pane">
+            <div class="pane-title">
+              <div class="library-heading character-library-heading">
+                <h2>캐릭터 라이브러리</h2>
+                <span id="characterCount" class="count"></span>
+              </div>
+              <div class="action-row">
+                <button id="moveCharacterUpButton" class="icon-button" type="button" title="선택 캐릭터 위로">↑</button>
+                <button id="moveCharacterDownButton" class="icon-button" type="button" title="선택 캐릭터 아래로">↓</button>
+                <button id="addCharacterButton" class="library-command create" type="button" title="새 캐릭터 생성">생성</button>
+                <button id="deleteCharacterButton" class="library-command delete" type="button" title="선택한 캐릭터 삭제">삭제</button>
+              </div>
+            </div>
+            <div id="characterSplitList" class="v2-split-list">
+              <button id="characterEditorVisibilityToggle" class="character-editor-visibility-toggle" type="button" aria-expanded="true" aria-label="캐릭터 속성창 숨기기" title="캐릭터 속성창 숨기기">‹</button>
+              <section id="characterListPanel" class="panel">
+                <label class="search character-search">
+                  <span>🔍</span>
+                  <input id="characterSearchInput" type="search" placeholder="캐릭터 검색">
+                  <button id="characterAdvancedSearchToggle" class="character-advanced-toggle" type="button" aria-label="상세 검색 열기" aria-expanded="false" aria-controls="characterAdvancedSearchPanel">▾</button>
+                </label>
+                <div id="characterTagFilters" class="tag-filter-row" hidden></div>
+                <div class="character-advanced-search">
+                  <div id="characterAdvancedSearchPanel" class="character-advanced-panel" hidden>
+                    <label class="advanced-field">
+                      <span>분류 태그</span>
+                      <select id="characterAdvancedTagSelect"></select>
+                    </label>
+                    <label class="advanced-field">
+                      <span>세계관</span>
+                      <select id="characterAdvancedWorldSelect"></select>
+                    </label>
+                    <div class="advanced-actions">
+                      <button id="characterAdvancedApplyButton" class="library-command create" type="button">검색 적용</button>
+                      <button id="characterAdvancedResetButton" class="text-button" type="button">초기화</button>
+                    </div>
+                  </div>
+                </div>
+                <div id="collapsedCharacterLayoutControls" class="collapsed-character-layout-controls" aria-label="캐릭터 카드 배열">
+                  <span class="layout-control-label">캐릭터 카드 배열</span>
+                  <button id="characterLayoutOneButton" class="layout-toggle-button" type="button" data-character-card-columns="1" aria-pressed="false">1줄</button>
+                  <button id="characterLayoutTwoButton" class="layout-toggle-button" type="button" data-character-card-columns="2" aria-pressed="false">2줄</button>
+                  <button id="characterLayoutThreeButton" class="layout-toggle-button" type="button" data-character-card-columns="3" aria-pressed="false">3줄</button>
+                </div>
+                <div id="characterList" class="character-list"></div>
+              </section>
+
+              <section id="characterEditorPanel" class="panel">
+                <div class="panel-header">
+                  <h3 id="characterEditorTitle">캐릭터 편집</h3>
+                  <button id="clearCharacterButton" class="text-button" type="button" title="선택 캐릭터 초기화">초기화</button>
+                </div>
+                <div id="characterTagPicker" class="tag-picker"></div>
+                <div class="editor-grid">
+                  <div class="field wide character-photo-field">
+                    <div class="character-photo-editor">
+                      <div id="characterPhotoPreview" class="character-photo-preview" aria-label="캐릭터 사진 미리보기"></div>
+                      <div class="character-photo-controls">
+                        <span class="field-label">캐릭터 사진</span>
+                        <span class="character-photo-help">라이브러리 카드 미리보기로 사용돼요.</span>
+                        <div class="character-photo-actions">
+                          <button id="chooseCharacterImageButton" class="text-button mini-action" type="button">사진 선택</button>
+                          <button id="removeCharacterImageButton" class="text-button mini-action danger" type="button">삭제</button>
+                        </div>
+                      </div>
+                      <input id="characterImageInput" type="file" accept="image/*" hidden>
+                    </div>
+                  </div>
+                  <div class="field wide">
+                    <label for="characterWorldSelect">연결 세계관</label>
+                    <select id="characterWorldSelect"></select>
+                  </div>
+                  <div class="field">
+                    <label for="characterName">캐릭터명</label>
+                    <input id="characterName" placeholder="이름">
+                  </div>
+                  <div class="field">
+                    <label for="characterAge">나이</label>
+                    <input id="characterAge" placeholder="28세">
+                  </div>
+                  <div class="field wide">
+                    <label for="characterJob">직업</label>
+                    <input id="characterJob" placeholder="직업, 역할, 소속">
+                  </div>
+                  <div class="field wide">
+                    <label for="characterAppearance">외형</label>
+                    <textarea id="characterAppearance" placeholder="머리색, 눈색, 체형, 인상, 주요 분위기"></textarea>
+                  </div>
+                  <div class="field wide">
+                    <label for="characterPersonality">성격</label>
+                    <textarea id="characterPersonality" placeholder="기본 성격, 관계에서 드러나는 태도, 약점"></textarea>
+                  </div>
+                  <div class="field wide">
+                    <label for="characterSpeech">말투</label>
+                    <textarea id="characterSpeech" placeholder="어조, 문장 길이, 자주 쓰는 표현, 금지 말투"></textarea>
+                  </div>
+                  <div class="field wide">
+                    <div class="opening-field-header">
+                      <label for="characterOpening">도입부</label>
+                      <div class="opening-field-actions">
+                        <div id="openingSlotPicker" class="opening-slot-picker" aria-label="도입부 선택"></div>
+                        <button id="copyOpeningButton" class="icon-button opening-copy-button" type="button" title="현재 도입부 복사" aria-label="현재 도입부 복사">⧉</button>
+                      </div>
+                    </div>
+                    <textarea id="characterOpening" class="character-opening" placeholder="캐릭터의 첫 장면이나 대화 도입부를 적어주세요."></textarea>
+                    <div id="openingCharCount" class="opening-char-count" aria-live="polite">0 / 1000자</div>
+                  </div>
+                  <div class="field wide">
+                    <div class="keyword-link-header">
+                      <span class="field-label">키워드</span>
+                      <span id="characterKeywordCount" class="count">0 / 15</span>
+                    </div>
+                    <div id="characterKeywordPicker" class="character-keyword-picker" aria-label="캐릭터 키워드 선택"></div>
+                  </div>
+                </div>
+                <div class="panel">
+                  <div class="panel-header">
+                    <h3>직접 속성</h3>
+                    <button id="addAttributeButton" class="text-button" type="button">+ 속성</button>
+                  </div>
+                  <div id="attributeList" class="attribute-list"></div>
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="worldWindow" class="vault-window world-window" data-vault-window hidden style="--window-left: 54%; --window-top: 7%; --window-width: min(438px, 33vw); --window-height: min(620px, 72vh);">
+        <header class="vault-window-header" data-vault-drag-handle>
+          <div>
+            <span class="vault-window-kicker">World Notes</span>
+            <h2>세계관</h2>
+          </div>
+          <button class="vault-window-control vault-window-close" type="button" data-vault-close aria-label="세계관 창 닫기">×</button>
+        </header>
+        <div class="vault-window-body">
+          <section class="panel world-panel">
+            <div class="panel-header">
+              <h3>세계관 라이브러리</h3>
+              <span id="worldCount" class="count"></span>
+            </div>
+            <div class="select-action-row">
+              <select id="worldSelect" class="control" title="세계관 선택"></select>
+              <button id="addWorldButton" class="library-command create" type="button" title="새 세계관 생성">생성</button>
+              <button id="deleteWorldButton" class="library-command delete" type="button" title="선택한 세계관 삭제">삭제</button>
+            </div>
+            <div class="world-editor-grid">
+              <div class="field wide">
+                <label for="worldName">세계관명</label>
+                <input id="worldName">
+              </div>
+              <div class="field wide">
+                <label for="worldGenre">장르</label>
+                <input id="worldGenre" placeholder="판타지, 로맨스, 아포칼립스 등">
+              </div>
+              <div class="field wide">
+                <label for="worldSummary">세계관 설명</label>
+                <textarea id="worldSummary" class="world-summary"></textarea>
+              </div>
+              <div class="field wide">
+                <label for="worldRules">세계관 유지 규칙</label>
+                <textarea id="worldRules"></textarea>
+              </div>
+              <div class="field wide">
+                <div class="keyword-link-header">
+                  <span class="field-label">키워드</span>
+                  <span id="worldKeywordCount" class="count">0 / 5</span>
+                </div>
+                <div id="worldKeywordPicker" class="world-keyword-picker" aria-label="세계관 연결 키워드 선택"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="keywordWindow" class="vault-window keyword-window" data-vault-window hidden style="--window-left: 6%; --window-top: 15%; --window-width: min(438px, 33vw); --window-height: min(620px, 72vh);">
+        <header class="vault-window-header" data-vault-drag-handle>
+          <div>
+            <span class="vault-window-kicker">Keyword Book</span>
+            <h2>키워드</h2>
+          </div>
+          <button class="vault-window-control vault-window-close" type="button" data-vault-close aria-label="키워드 창 닫기">×</button>
+        </header>
+        <div class="vault-window-body">
+          <section class="library-stack keyword-stack">
+            <div class="pane-title">
+              <div class="library-heading">
+                <h2>키워드북</h2>
+                <span id="keywordCount" class="count"></span>
+              </div>
+              <div class="action-row">
+                <button id="addKeywordButton" class="library-command create" type="button" title="새 키워드 생성">생성</button>
+                <button id="deleteKeywordButton" class="library-command delete" type="button" title="선택한 키워드 삭제">삭제</button>
+                <button id="manageKeywordCategoriesButton" class="library-command" type="button" title="키워드 분류 관리">분류 관리</button>
+              </div>
+            </div>
+            <label class="search keyword-search">
+              <span>🔍</span>
+              <input id="keywordSearchInput" type="search" placeholder="키워드 검색">
+              <button id="keywordAdvancedSearchToggle" class="advanced-search-toggle" type="button" aria-label="상세 검색 열기" aria-expanded="false" aria-controls="keywordAdvancedSearchPanel">▾</button>
+            </label>
+            <div class="advanced-search keyword-advanced-search" hidden>
+              <div id="keywordAdvancedSearchPanel" class="advanced-search-panel" hidden>
+                <span class="advanced-panel-title">분류 태그</span>
+                <div id="keywordFilters" class="filters advanced-filter-row" aria-label="키워드 분류"></div>
+              </div>
+            </div>
+            <div id="keywordList" class="keyword-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="sceneWindow" class="vault-window scene-window" data-vault-window hidden style="--window-left: 12%; --window-top: 12%; --window-width: min(438px, 33vw); --window-height: min(620px, 72vh);">
+        <header class="vault-window-header" data-vault-drag-handle>
+          <div>
+            <span class="vault-window-kicker">Scene Cards</span>
+            <h2>상황</h2>
+          </div>
+          <button class="vault-window-control vault-window-close" type="button" data-vault-close aria-label="상황 창 닫기">×</button>
+        </header>
+        <div class="vault-window-body">
+          <section class="library-stack">
+            <div class="pane-title">
+              <div class="library-heading">
+                <h2>상황</h2>
+                <span id="sceneCount" class="count"></span>
+              </div>
+              <div class="action-row">
+                <button id="addSceneButton" class="library-command create" type="button" title="새 상황 생성">생성</button>
+                <button id="deleteSceneButton" class="library-command delete" type="button" title="선택한 상황 삭제">삭제</button>
+                <button id="manageSceneCategoriesButton" class="library-command" type="button" title="상황 분류 관리">분류 관리</button>
+              </div>
+            </div>
+            <label class="search scene-search">
+              <span>🔍</span>
+              <input id="sceneSearchInput" type="search" placeholder="상황 검색">
+              <button id="sceneAdvancedSearchToggle" class="advanced-search-toggle" type="button" aria-label="상세 검색 열기" aria-expanded="false" aria-controls="sceneAdvancedSearchPanel">▾</button>
+            </label>
+            <div class="advanced-search scene-advanced-search" hidden>
+              <div id="sceneAdvancedSearchPanel" class="advanced-search-panel" hidden>
+                <span class="advanced-panel-title">분류 태그</span>
+                <div id="sceneFilters" class="filters advanced-filter-row" aria-label="상황 분류"></div>
+              </div>
+            </div>
+            <div id="sceneList" class="scene-list"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="promptWindow" class="vault-window prompt-window is-open" data-vault-window data-default-open style="--window-left: 61%; --window-top: 15%; --window-width: min(438px, 33vw); --window-height: min(620px, 72vh);">
+        <header class="vault-window-header" data-vault-drag-handle>
+          <div>
+            <span class="vault-window-kicker">Composer</span>
+            <h2>프롬프트</h2>
+          </div>
+          <button class="vault-window-control vault-window-close" type="button" data-vault-close aria-label="프롬프트 창 닫기">×</button>
+        </header>
+        <div class="vault-window-body">
+          <section class="panel prompt-panel">
+            <div class="panel-header">
+              <h3>프롬프트 컴포저</h3>
+              <span id="promptMeta" class="count"></span>
+            </div>
+            <div class="prompt-controls">
+              <select id="promptVariantSelect" class="control" title="프롬프트 버전"></select>
+              <button id="regeneratePromptButton" class="text-button" type="button">재생성</button>
+              <button id="copyPromptButton" class="text-button primary" type="button">복사</button>
+            </div>
+            <textarea id="promptOutput" class="prompt-editor"></textarea>
+          </section>
+        </div>
+      </section>
+
+      <div id="sceneKeywordResizeHandle" class="scene-keyword-resize-handle vault-hidden-handle" role="separator" tabindex="-1" aria-hidden="true"></div>
+      <div id="leftResizeHandle" class="resize-handle left-resize-handle vault-hidden-handle" role="separator" tabindex="-1" aria-hidden="true"></div>
+      <div id="worldPromptResizeHandle" class="world-prompt-resize-handle vault-hidden-handle" role="separator" tabindex="-1" aria-hidden="true"></div>
+      <div id="rightResizeHandle" class="resize-handle right-resize-handle vault-hidden-handle" role="separator" tabindex="-1" aria-hidden="true"></div>
+    </main>
+
+
+      <div class="toolbar floating-options-toolbar" id="floatingOptionsToolbar">
+        <button id="optionsToggleButton" class="options-toggle-button" type="button" aria-label="옵션 메뉴 열기" title="옵션" aria-expanded="false" aria-controls="floatingOptionsMenu">⚙</button>
+        <button id="exportButton" class="text-button export-menu-button" type="button" title="파일 메뉴" aria-haspopup="menu" aria-expanded="false">파일</button>
+      </div>
+
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="./data.js"></script>
+  <script src="./storage.js"></script>
+  <script src="./shared-utils.js"></script>
+  <script src="./scene.js?v=20260702-mobile-prompt"></script>
+  <script src="./keywordbook.js"></script>
+  <script src="./character.js"></script>
+  <script src="./world.js"></script>
+  <script src="./ui.js"></script>
+  <script src="./prompt-builder.js"></script>
+  <script src="./import-export.js"></script>
+  <script src="./app.js?v=20260702-mobile-prompt"></script>
+  <script src="./backup-manager.js"></script>
+  <script src="./ux-upgrades.js?v=20260702-mobile-prompt"></script>
+  <script src="./vault-windows.js"></script>
+  <script>
+    (() => {
+      const toolbar = document.getElementById("floatingOptionsToolbar") || document.querySelector(".toolbar");
+      const toggle = document.getElementById("optionsToggleButton");
+      if (!toolbar || !toggle) {
+        return;
+      }
+      const closeOptions = () => {
+        toolbar.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      };
+      const openOptions = () => {
+        toolbar.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+      };
+      toggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (toolbar.classList.contains("is-open")) {
+          closeOptions();
+        } else {
+          openOptions();
+        }
+      });
+      toolbar.addEventListener("click", (event) => {
+        event.stopPropagation();
+      });
+      document.addEventListener("click", (event) => {
+        const exportMenu = document.getElementById("exportMenu");
+        if (exportMenu && !exportMenu.hidden && event.target.closest("#exportMenu, #exportButton")) {
+          return;
+        }
+        if (!event.target.closest("#floatingOptionsToolbar")) {
+          closeOptions();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          closeOptions();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
